@@ -69,7 +69,7 @@ class Composer extends DebugDataItemPluginBase implements ContainerFactoryPlugin
       $data['packages'][] = [
         'name' => $package->getName(),
         'version' => $package->getVersion(),
-        'time' => $package->getTime()->format('c'),
+        'time' => $package->getTime()?->format('c'),
       ];
     }
     return $data;
