@@ -21,20 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Composer extends DebugDataItemPluginBase implements ContainerFactoryPluginInterface {
 
-  private string $root;
+  /**
+   * The composer info.
+   *
+   * @var \ComposerLockParser\ComposerInfo
+   */
+  private ComposerInfo $composerInfo;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = new static($configuration, $plugin_id, $plugin_definition);
-    $instance->root = $container->getParameter('app.root');
+    $instance->composerInfo = $container->get('helfi_debug.composer_info');
     return $instance;
-  }
-
-  private function getComposerInfo() : ComposerInfo {
-    $path = sprintf('%s/../composer.lock', $this->root);
-    if (!file_exists($path)) {
-      throw new \InvalidArgumentException('Composer.lock not found.');
-    }
-    return new ComposerInfo($path);
   }
 
   /**
@@ -48,15 +48,18 @@ class Composer extends DebugDataItemPluginBase implements ContainerFactoryPlugin
    */
   private function includePackage(Package $package) : bool {
     return match(TRUE) {
-      str_starts_with($package->getName(), 'drupal/helfi_') => TRUE,
+      str_starts_with($package->getName(), 'drupal/helfi_'),
       str_starts_with($package->getName(), 'drupal/hdbt') => TRUE,
       default => FALSE,
     };
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function collect(): array {
     /** @var \ComposerLockParser\Package[] $packages */
-    $packages = $this->getComposerInfo()->getPackages();
+    $packages = $this->composerInfo->getPackages();
 
     $data = [];
     foreach ($packages as $package) {
@@ -66,9 +69,6 @@ class Composer extends DebugDataItemPluginBase implements ContainerFactoryPlugin
       $data['packages'][] = [
         'name' => $package->getName(),
         'version' => $package->getVersion(),
-        'type' => $package->getType(),
-        'require' => $package->getRequire(),
-        'requireDev' => $package->getRequireDev(),
         'time' => $package->getTime()->format('c'),
       ];
     }

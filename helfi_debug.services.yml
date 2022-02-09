@@ -1,4 +1,8 @@
 services:
+  helfi_debug.composer_info:
+    class: ComposerLockParser\ComposerInfo
+    arguments: ['%app.root%/../composer.lock']
+
   plugin.manager.debug_data_item:
     class: Drupal\helfi_debug\DebugDataItemPluginManager
     parent: default_plugin_manager
