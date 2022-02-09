@@ -7,7 +7,7 @@ Provides a module to gather all kind of debug data from current Drupal instance.
 ## Requirements
 
 - PHP 8.0 or higher.
--
+
 ## Contact
 
 Slack: #helfi-drupal (http://helsinkicity.slack.com/)
