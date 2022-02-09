@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/City-of-Helsinki/drupal-module-helfi-debug/workflows/CI/badge.svg)
 
-Provides a module to gather all kind of debug data from current Drupal instance.
+Provides a module to gather all kind of debug information from current Drupal instance.
 
 ## Requirements
 
