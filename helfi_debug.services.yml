@@ -1,0 +1,4 @@
+services:
+  plugin.manager.debug_data_item:
+    class: Drupal\helfi_debug\DebugDataItemPluginManager
+    parent: default_plugin_manager

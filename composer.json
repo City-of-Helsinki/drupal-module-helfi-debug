@@ -1,0 +1,11 @@
+{
+    "name": "drupal/helfi_debug",
+    "type": "drupal-module",
+    "description": "Helfi - Debug",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0",
+        "t4web/composer-lock-parser": "^1.1"
+    }
+}
