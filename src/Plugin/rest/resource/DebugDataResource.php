@@ -55,7 +55,7 @@ final class DebugDataResource extends ResourceBase implements DependentPluginInt
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function get(Request $request) {
+  public function get() {
     $data = [];
     foreach ($this->manager->getDefinitions() as $definition) {
       /** @var \Drupal\helfi_debug\DebugDataItemInterface $instance */
