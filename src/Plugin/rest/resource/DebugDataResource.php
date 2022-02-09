@@ -9,7 +9,6 @@ use Drupal\helfi_debug\DebugDataItemPluginManager;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Represents Debug records as resources.
