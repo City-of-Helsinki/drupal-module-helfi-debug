@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\helfi_debug\Plugin\rest\resource;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\helfi_debug\DebugDataItemPluginManager;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -31,19 +33,41 @@ final class DebugDataResource extends ResourceBase implements DependentPluginInt
   private DebugDataItemPluginManager $manager;
 
   /**
+   * The list of initialized plugins.
+   *
+   * @var \Drupal\helfi_debug\DebugDataItemInterface[]
+   */
+  private array $debugDataPlugins = [];
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) : DebugDataResource {
-    $instance = new static(
+    $instance = parent::create(
+      $container,
       $configuration,
       $plugin_id,
-      $plugin_definition,
-      $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest')
+      $plugin_definition
     );
     $instance->manager = $container->get('plugin.manager.debug_data_item');
 
     return $instance;
+  }
+
+  /**
+   * Initializes debug data plugins.
+   *
+   * @return \Drupal\helfi_debug\DebugDataItemInterface[]
+   *   The list of debug data plugins.
+   */
+  private function getDataPlugins() : array {
+    if (!$this->debugDataPlugins) {
+      foreach ($this->manager->getDefinitions() as $definition) {
+        $this->debugDataPlugins[$definition['id']] = $this->manager
+          ->createInstance($definition['id']);
+      }
+    }
+    return $this->debugDataPlugins;
   }
 
   /**
@@ -54,24 +78,45 @@ final class DebugDataResource extends ResourceBase implements DependentPluginInt
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function get() {
+  public function get() : ResourceResponse {
+    $cacheableMetadata = new CacheableMetadata();
+
     $data = [];
-    foreach ($this->manager->getDefinitions() as $definition) {
-      /** @var \Drupal\helfi_debug\DebugDataItemInterface $instance */
-      $instance = $this->manager->createInstance($definition['id']);
-      $data[$definition['id']] = [
+    foreach ($this->getDataPlugins() as $id => $instance) {
+      $data[$id] = [
         'label' => $instance->label(),
         'data' => $instance->collect(),
       ];
+
+      if ($instance instanceof CacheableDependencyInterface) {
+        $cacheableMetadata->addCacheableDependency($instance);
+      }
     }
-    return new ResourceResponse($data);
+    return (new ResourceResponse($data))
+      ->addCacheableDependency($cacheableMetadata);
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return [];
+    $dependencies = [];
+
+    foreach ($this->getDataPlugins() as $plugin) {
+      foreach ($plugin->calculateDependencies() as $type => $value) {
+        if (!isset($dependencies[$type])) {
+          $dependencies[$type] = [];
+        }
+        // Merge existing dependencies together, make them unique and
+        // reindex the dependency list.
+        $dependencies[$type] = array_values(
+          array_unique(
+            array_merge($dependencies[$type], $value)
+          )
+        );
+      }
+    }
+    return $dependencies;
   }
 
 }

@@ -19,4 +19,11 @@ abstract class DebugDataItemPluginBase extends PluginBase implements DebugDataIt
     return (string) $this->pluginDefinition['label'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [];
+  }
+
 }
