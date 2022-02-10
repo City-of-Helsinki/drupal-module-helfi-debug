@@ -7,7 +7,7 @@ Provides a module to gather all kind of debug information from current Drupal in
 ## Usage
 
 By default this module provides the following debug plugins:
-- `composer` (shows installed `drupal/helfi_*` and `drupal/hdbt*` packages)
+- `composer` (shows installed `drupal/helfi_*` and `drupal/hdbt*` packages and their versions)
 
 Navigate to `/admin/debug` to see available debug data, or`/api/v1/debug` for JSON endpoint.
 
