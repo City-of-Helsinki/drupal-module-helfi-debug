@@ -56,7 +56,7 @@ final class DebugController extends ControllerBase {
         ->createInstance($definition['id']);
 
       $build[$id] = [
-        '#theme' => 'debug_item_' . $id,
+        '#theme' => 'debug_item',
         '#id' => $definition['id'],
         '#label' => $instance->label(),
         '#data' => $instance->collect(),
