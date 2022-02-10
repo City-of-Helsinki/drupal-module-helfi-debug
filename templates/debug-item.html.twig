@@ -5,6 +5,12 @@
  *
  * For example: debug-item--composer.html.twig, where 'composer' is your plugin's ID.
  *
+ * You can then loop your data with something like this:
+ * {% for item in data.packages %}
+ *    {{ item.name }}
+ *    {{ item.version }}
+ * {% endfor %}
+ *
  *  Available variables:
  *  - id: The ID of your plugin
  *  - label The label of your plugin
