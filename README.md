@@ -4,6 +4,10 @@
 
 Provides a module to gather all kind of debug information from current Drupal instance.
 
+## Installation
+
+- `$ composer require drupal/helfi_debug:^1.0`
+
 ## Usage
 
 By default this module provides the following debug plugins:
