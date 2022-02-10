@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Contains Debug module.
+ */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_theme().
+ */
+function helfi_debug_theme() {
+  /** @var \Drupal\helfi_debug\DebugDataItemPluginManager $manager */
+  $manager = \Drupal::service('plugin.manager.debug_data_item');
+
+  $themes = [];
+
+  foreach ($manager->getDefinitions() as $definition) {
+    $id = Html::cleanCssIdentifier($definition['id']);
+    $themes['debug_item_' . $id] = [
+      'variables' => [
+        'id' => NULL,
+        'label' => NULL,
+        'data' => [],
+      ],
+      'template' => 'debug-item-' . $id,
+    ];
+  }
+  return $themes;
+}

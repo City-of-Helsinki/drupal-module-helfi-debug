@@ -1,0 +1,5 @@
+helfi_debug.settings:
+  title: Debug
+  description: Shows gathered debug data
+  route_name:  helfi_debug.list
+  parent: system.admin

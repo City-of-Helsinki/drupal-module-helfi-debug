@@ -1,0 +1,7 @@
+{{ id }}
+{{ label }}
+
+{% for item in data.packages %}
+  {{ item.name }}
+  {{ item.version }}
+{% endfor %}

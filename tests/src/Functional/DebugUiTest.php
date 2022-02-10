@@ -12,7 +12,7 @@ use Drupal\user\Entity\Role;
  *
  * @group helfi_debug
  */
-class DebugDataResourceTest extends BrowserTestBase {
+class DebugUiTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -44,6 +44,21 @@ class DebugDataResourceTest extends BrowserTestBase {
     $content = json_decode($this->getSession()->getPage()->getContent(), TRUE);
 
     $this->assertNotEmpty($content['composer']);
+  }
+
+  /**
+   * Tests the admin UI route.
+   */
+  public function testDebugAdminUi() : void {
+    $this->drupalGet('/admin/debug');
+    $this->assertSession()->statusCodeEquals(403);
+
+    $account = $this->createUser(['restful get helfi_debug_data']);
+    $this->drupalLogin($account);
+
+    $this->drupalGet('/admin/debug');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Composer');
   }
 
 }

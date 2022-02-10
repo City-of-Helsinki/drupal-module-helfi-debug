@@ -1,0 +1,7 @@
+helfi_debug.list:
+  path: '/admin/debug'
+  defaults:
+    _title: 'Debug'
+    _controller: '\Drupal\helfi_debug\Controller\DebugController::build'
+  requirements:
+    _permission: 'restful get helfi_debug_data'
